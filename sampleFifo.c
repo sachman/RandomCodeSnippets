@@ -1,7 +1,16 @@
+
+
+
 /*
-**	@brief										Function to read data from the buffer of a FIFO object.
-**	@fifo(PARAM_IN)						Pointer to the FIFO object.
-**	@data_read(PARAM_IN)			The pointer to the array to which the read data will be copied.
+**	Description	:	Set of API to initialise and use FIFO buffers
+*/
+
+
+
+/*
+**	@brief				Function to read data from the buffer of a FIFO object.
+**	@fifo(PARAM_IN)			Pointer to the FIFO object.
+**	@data_read(PARAM_IN)		The pointer to the array to which the read data will be copied.
 **	@bytes_count(PARAM_IN)		The number of bytes to be read from the buffer of the FIFO object.
 */
 uint16_t Fifo_Read(struct FIFO_struct *fifo, uint8_t *data_read, const uint16_t bytes_count)
@@ -23,11 +32,6 @@ uint16_t Fifo_Read(struct FIFO_struct *fifo, uint8_t *data_read, const uint16_t 
 	/*	Perform the read operations read one byte each time	*/
 	for (for_var = 0; for_var < bytes_count; for_var ++)
 	{
-		/*	If the FIFO buffer is empty	*/
-//		if (fifo->head < 0)
-//		{
-//			return bytesToRead;
-//		}
 		if (Fifo_bufferIsEmpty(fifo))
 			return bytesToRead;
 		
@@ -89,11 +93,6 @@ uint16_t Fifo_Write(struct FIFO_struct *fifo, const uint8_t *data_to_write, cons
 		/*	Position where the present write has to be performed	*/
 		next  = (fifo->tail+1)%fifo->size;
 		
-		/*	If the FIFO buffer is FULL	*/
-//		if (next == fifo->head)
-//		{
-//			return bytesToWrite;
-//		}
 		if (Fifo_bufferIsFull(fifo))
 		{
 			return bytesToWrite;
@@ -118,20 +117,20 @@ uint16_t Fifo_Write(struct FIFO_struct *fifo, const uint8_t *data_to_write, cons
 
 
 /*
-**	@brief									Function to check if the buffer of a FIFO object if empty.
+**	@brief						Function to check if the buffer of a FIFO object if empty.
 **	@pFifo(PARAM_IN)				Pointer to the FIFO object(structure).
 */
 bool Fifo_bufferIsEmpty(const struct FIFO_struct *pFifo)
 {
 	if (pFifo->head < 0)
-		return true;									/*	Buffer is empty	*/
+		return true;			/*	Buffer is empty	*/
 	else
-		return false;									/*	Buffer is not empty	*/
+		return false;			/*	Buffer is not empty	*/
 }
 
 
 /*
-**	@brief									Function to check if the buffer of a FIFO object if full.
+**	@brief						Function to check if the buffer of a FIFO object if full.
 **	@pFifo(PARAM_IN)				Pointer to the FIFO object(structure).
 */
 bool Fifo_bufferIsFull(const struct FIFO_struct *pFifo)
@@ -141,14 +140,14 @@ bool Fifo_bufferIsFull(const struct FIFO_struct *pFifo)
 	next = (pFifo->tail+1)%pFifo->size;
 	
 	if (next == pFifo->head)
-		return true;														/*	Buffer is Full	*/
+		return true;			/*	Buffer is Full	*/
 	else
-		return false;														/*	Buffer is not Full	*/
+		return false;			/*	Buffer is not Full	*/
 }
 
 
 /*
-**	@brief									Function to prepare a FIFO object for functioning.
+**	@brief						Function to prepare a FIFO object for functioning.
 **	@pFifo(PARAM_IN)				Pointer to the FIFO object(structure).
 **	@size(PARAM_IN)					The size of the buffer of the FIFO object.
 */
@@ -157,12 +156,12 @@ void Fifo_Init(struct FIFO_struct *pFifo, const uint8_t size)
 	pFifo->head = -1;																			
 	pFifo->tail = -1;
 	pFifo->size = size;
-	pFifo->buffer = malloc(size*(sizeof(uint8_t)));				/*	Dynamic allocation for buffer	*/
+	pFifo->buffer = malloc(size*(sizeof(uint8_t)));	/*	Dynamic allocation for buffer	*/
 }
 
 
 /*
-**	@brief									Function to discard a FIFO object.
+**	@brief						Function to discard a FIFO object.
 **	@pFifo(PARAM_IN)				Pointer to the FIFO object(structure).
 **	@size(PARAM_IN)					The size of the buffer of the FIFO object.
 */
@@ -170,15 +169,15 @@ void Fifo_DeInit(struct FIFO_struct *pFifo)
 {
 	pFifo->head = -1;																			
 	pFifo->tail = -1;
-	pFifo->size = 0;													/*	Indicate the size of the FIFO buffer to be zero	*/
-	free(pFifo->buffer);											/*	Free the memory reserved by the FIFO buffer	*/
-	pFifo->buffer = NULL;											/*	Null the buffer pointer	*/
+	pFifo->size = 0;				/*	Indicate the size of the FIFO buffer to be zero	*/
+	free(pFifo->buffer);				/*	Free the memory reserved by the FIFO buffer	*/
+	pFifo->buffer = NULL;				/*	Null the buffer pointer	*/
 }
 
 
 /*
-**	@brief									Function to put read and write pointers of Fifo buffer to their starting states.
-**	@pFifo(PARAM_IN)				Pointer to the FIFO object(structure).
+**	@brief				Function to put read and write pointers of Fifo buffer to their initial states.
+**	@pFifo(PARAM_IN)		Pointer to the FIFO object(structure).
 */
 void Fifo_Flush(struct FIFO_struct *pFifo)
 {

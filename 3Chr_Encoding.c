@@ -1,3 +1,14 @@
+
+
+
+/*
+**	Description:	To decode the data, encoded using 3 character encoding technique.
+*/
+
+
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
